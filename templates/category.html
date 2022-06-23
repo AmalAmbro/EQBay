@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    
+</head>
+<body>
+    <h1>Categories</h1>
+    <ul>
+        {% for category in categories %}
+            <li><a href={% url 'web:category_detail' industry=industry main_category=main_category category=category.name %}>{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    {% if show_sub_categories %}
+    
+    <form  action="" method='post'>
+        {% csrf_token %}
+        <h1>Sub Categories</h1>
+        <select name="subCategories" id="sub-category">
+            <option value="0">-----------</option>
+            {% for sub_category in sub_categories %}
+                <option value={{ sub_category.auto_id }}>{{ sub_category.name }}</option>
+            {% endfor %}
+        </select>
+        
+        <h1>Products</h1>
+        <select name="products" id="products">
+            <option value="0">-----------</option>
+        </select>
+
+    </form>
+    {% endif %}
+</body> 
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<script>
+    $('#sub-category').change(function(){
+        const sub_category = $(this).val();
+        const csrf = $('input[name=csrfmiddlewaretoken]').val()
+        console.log(sub_category);
+        jQuery.ajax({
+            type:"GET",
+            url: '{% url "web:get_product" %}',
+            data: {'sub_category':sub_category},
+            success: function(response) {
+                let html_data = '<option value="">---------</option>'
+                console.log('success:',response)
+                response.forEach((data) => {
+                    html_data += `<option value="${data.auto_id}">${data.name}</option>`
+                });
+                $('#products').html(html_data);
+            },
+            error: function(error){
+                console.log('error:',error)
+            }
+        })
+    })
+</script>
+</html>
+

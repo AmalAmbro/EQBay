@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>Industries</h1>
+    <ul>
+        {% for industry in industries %}
+            <li><a href={% url 'web:index_detail' industry=industry.name %}>{{ industry.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% if category_show %}
+        <h2>Main Categories</h2>
+        <ul>
+            {% for main_category in main_categories %}
+                <li><a href={% url 'web:category' industry=industry main_category=main_category.name  %}>{{ main_category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+</body>
+</html>
